@@ -3,38 +3,32 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="theme-color" content="#f4f5f1" />
+    <meta name="theme-color" content="#101010" />
     <meta name="description" content="Простой личный учёт доходов и расходов." />
     <link rel="manifest" href="manifest.webmanifest" />
     <link rel="icon" href="icon.svg" type="image/svg+xml" />
+    <script>try { const theme = localStorage.getItem('my-finances.theme.v1') === 'light' ? 'light' : 'dark'; document.documentElement.dataset.theme = theme; document.querySelector('meta[name="theme-color"]').content = theme === 'dark' ? '#101010' : '#f4f5f3'; } catch { document.documentElement.dataset.theme = 'dark'; }</script>
     <link rel="stylesheet" href="styles.css" />
     <title>Мои финансы</title>
   </head>
   <body>
     <div class="app-shell">
       <header class="topbar">
-        <div class="brand-mark" aria-hidden="true"><span>₽</span></div>
         <div class="brand-copy">
-          <p class="eyebrow">ЛИЧНЫЙ БЮДЖЕТ</p>
           <h1>Мои финансы</h1>
         </div>
-        <button class="icon-button profile-button" type="button" aria-label="О приложении" id="about-button">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>
+        <button class="icon-button profile-button" type="button" aria-label="Настройки" id="about-button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Z"/><path d="m19.4 15 .1.1a1.7 1.7 0 1 1-2.4 2.4l-.1-.1a1.7 1.7 0 0 0-2.9 1.2v.2a1.7 1.7 0 1 1-3.4 0v-.2a1.7 1.7 0 0 0-2.9-1.2l-.1.1a1.7 1.7 0 1 1-2.4-2.4l.1-.1a1.7 1.7 0 0 0-1.2-2.9H4a1.7 1.7 0 1 1 0-3.4h.2a1.7 1.7 0 0 0 1.2-2.9l-.1-.1a1.7 1.7 0 1 1 2.4-2.4l.1.1a1.7 1.7 0 0 0 2.9-1.2V2a1.7 1.7 0 1 1 3.4 0v.2a1.7 1.7 0 0 0 2.9 1.2l.1-.1a1.7 1.7 0 1 1 2.4 2.4l-.1.1a1.7 1.7 0 0 0 1.2 2.9h.2a1.7 1.7 0 1 1 0 3.4h-.2a1.7 1.7 0 0 0-1.2 2.9Z"/></svg>
         </button>
       </header>
 
       <main>
         <section class="view is-active" id="view-home" aria-labelledby="home-title">
-          <div class="section-intro">
-            <div>
-              <p class="eyebrow muted" id="today-label"></p>
-              <h2 id="home-title">Ваш баланс</h2>
-            </div>
-          </div>
+          <div class="screen-reader-only"><p id="today-label"></p><h2 id="home-title">Ваш баланс</h2></div>
 
           <article class="balance-card">
             <div class="balance-topline">
-              <span>Всего доступно</span>
+              <span id="balance-label">На всех счетах</span>
               <button class="balance-eye" type="button" id="toggle-balance" aria-label="Скрыть баланс">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.3-6 9.5-6 9.5 6 9.5 6-3.3 6-9.5 6-9.5-6-9.5-6Z"/><circle cx="12" cy="12" r="2.8"/></svg>
               </button>
@@ -42,12 +36,16 @@
             <p class="balance-value" id="total-balance">0 ₽</p>
             <div class="balance-footer">
               <span class="balance-dot"></span>
-              <span>Баланс по всем операциям</span>
+              <span id="balance-scope-caption">Общий баланс</span>
               <span class="balance-period" id="balance-period"></span>
             </div>
-            <div class="balance-decoration decoration-one"></div>
-            <div class="balance-decoration decoration-two"></div>
+            <svg class="balance-sparkline" id="balance-sparkline" viewBox="0 0 110 54" role="img" aria-label="Динамика баланса за последние 30 дней"><title id="balance-sparkline-title">Динамика баланса за последние 30 дней</title><defs><linearGradient id="sparkline-gradient" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--green)" stop-opacity=".22"/><stop offset="100%" stop-color="var(--green)" stop-opacity="0"/></linearGradient></defs><path class="sparkline-area" d="M2 48 20 43 32 47 47 32 60 37 72 26 83 30 108 5v49H2Z"/><path class="sparkline-line" d="m2 48 18-5 12 4 15-15 13 5 12-11 11 4L108 5"/></svg>
           </article>
+
+          <section class="home-account-section" aria-label="Счета">
+            <div class="home-account-heading"><p class="eyebrow muted">МОИ СЧЕТА</p><button class="text-button" type="button" data-go="plan">Управлять <span aria-hidden="true">→</span></button></div>
+            <div id="home-account-tabs" class="home-account-tabs" role="group" aria-label="Показать баланс выбранного счёта"></div>
+          </section>
 
           <div class="month-cards">
             <article class="month-card income-card">
@@ -60,10 +58,13 @@
             </article>
           </div>
 
-          <button class="primary-action" type="button" data-open-add>
-            <span class="plus-icon" aria-hidden="true">+</span>
-            Добавить операцию
-          </button>
+          <section class="content-section category-preview" aria-labelledby="category-preview-title">
+            <div class="section-heading">
+              <div><p class="eyebrow muted">ЭТОТ МЕСЯЦ</p><h2 id="category-preview-title">Расходы по категориям</h2></div>
+              <button class="text-button" type="button" data-go="analytics">Подробнее <span aria-hidden="true">→</span></button>
+            </div>
+            <div id="home-category-list" class="category-list"></div>
+          </section>
 
           <section class="content-section" aria-labelledby="recent-title">
             <div class="section-heading">
@@ -73,12 +74,12 @@
             <div id="recent-list" class="transaction-list"></div>
           </section>
 
-          <section class="content-section category-preview" aria-labelledby="category-preview-title">
+          <section class="content-section home-plan-preview" aria-labelledby="home-plan-title">
             <div class="section-heading">
-              <div><p class="eyebrow muted">ЭТОТ МЕСЯЦ</p><h2 id="category-preview-title">Куда уходят деньги</h2></div>
-              <button class="text-button" type="button" data-go="analytics">Анализ <span aria-hidden="true">→</span></button>
+              <div><p class="eyebrow muted">ВАШИ ПЛАНЫ</p><h2 id="home-plan-title">Бюджеты и цели</h2></div>
+              <button class="text-button" type="button" data-go="plan">Настроить <span aria-hidden="true">→</span></button>
             </div>
-            <div id="home-category-list" class="category-list"></div>
+            <div id="home-plan-list" class="home-plan-list"></div>
           </section>
         </section>
 
@@ -90,6 +91,13 @@
           <div class="filter-bar">
             <label class="month-select-wrap" for="history-month"><span class="calendar-icon" aria-hidden="true">▦</span><input id="history-month" type="month" /></label>
             <button class="filter-clear" type="button" id="history-all">Все</button>
+          </div>
+          <label class="history-search" for="history-search"><span aria-hidden="true">⌕</span><input id="history-search" type="search" placeholder="Найти операцию" autocomplete="off" /></label>
+          <div class="history-filter-grid">
+            <label class="screen-reader-only" for="history-type">Тип операции</label>
+            <select class="history-filter-select" id="history-type"><option value="all">Все типы</option><option value="income">Доходы</option><option value="expense">Расходы</option><option value="transfer">Переводы</option></select>
+            <label class="screen-reader-only" for="history-account">Счёт</label>
+            <select class="history-filter-select" id="history-account"><option value="all">Все счета</option></select>
           </div>
           <div class="history-summary" id="history-summary"></div>
           <div id="history-list" class="transaction-list grouped-list"></div>
@@ -115,6 +123,74 @@
             <div class="trend-chart" id="trend-chart" aria-label="Доходы и расходы за последние шесть месяцев"></div>
           </article>
         </section>
+
+        <section class="view" id="view-plan" aria-labelledby="plan-title" hidden>
+          <div class="section-intro">
+            <div><p class="eyebrow muted">СЧЕТА И ПРИВЫЧКИ</p><h2 id="plan-title">Мой план</h2></div>
+          </div>
+
+          <section class="plan-section" aria-labelledby="accounts-title">
+            <div class="section-heading"><div><p class="eyebrow muted">ДЕНЬГИ ПО МЕСТАМ</p><h3 id="accounts-title">Счета</h3></div></div>
+            <div id="account-list" class="account-list"></div>
+            <details class="plan-editor" id="account-editor">
+              <summary id="account-editor-summary">Добавить счёт</summary>
+              <form id="account-form" class="plan-form">
+                <label class="field-label" for="account-name-input">Название<input id="account-name-input" name="name" type="text" maxlength="32" placeholder="Например, Наличные" required /></label>
+                <div class="form-grid">
+                  <label class="field-label" for="account-type-input">Тип<select id="account-type-input" name="type"><option value="card">Банковская карта</option><option value="cash">Наличные</option><option value="savings">Накопительный</option><option value="investment">Инвестиции</option></select></label>
+                  <label class="field-label" for="account-balance-input">Начальный остаток<input id="account-balance-input" name="balance" type="number" inputmode="decimal" min="0" step="0.01" placeholder="0" value="0" /></label>
+                </div>
+                <button class="secondary-action" id="account-submit" type="submit">Сохранить счёт</button>
+                <button class="cancel-edit-action" id="cancel-account-edit" type="button" hidden>Отмена</button>
+              </form>
+            </details>
+          </section>
+
+          <section class="plan-section" aria-labelledby="budgets-title">
+            <div class="section-heading"><div><p class="eyebrow muted">РАСХОДЫ ЗА МЕСЯЦ</p><h3 id="budgets-title">Лимиты по категориям</h3></div></div>
+            <div id="budget-list" class="budget-list"></div>
+            <details class="plan-editor" id="budget-editor">
+              <summary id="budget-editor-summary">Задать или изменить лимит</summary>
+              <form id="budget-form" class="plan-form">
+                <label class="field-label" for="budget-category-input">Категория расходов<select id="budget-category-input" name="category" required></select></label>
+                <label class="field-label" for="budget-amount-input">Лимит на месяц<input id="budget-amount-input" name="amount" type="number" inputmode="decimal" min="0.01" step="0.01" placeholder="0" required /></label>
+                <button class="secondary-action" id="budget-submit" type="submit">Сохранить лимит</button>
+                <button class="cancel-edit-action" id="cancel-budget-edit" type="button" hidden>Отмена</button>
+              </form>
+            </details>
+          </section>
+
+          <section class="plan-section" aria-labelledby="goals-title">
+            <div class="section-heading"><div><p class="eyebrow muted">ОТКЛАДЫВАТЬ НА ВАЖНОЕ</p><h3 id="goals-title">Цели накопления</h3></div></div>
+            <div id="goal-list" class="goal-list"></div>
+            <details class="plan-editor" id="goal-editor">
+              <summary id="goal-editor-summary">Создать цель</summary>
+              <form id="goal-form" class="plan-form">
+                <label class="field-label" for="goal-name-input">На что копим<input id="goal-name-input" name="name" type="text" maxlength="32" placeholder="Например, отпуск" required /></label>
+                <div class="form-grid">
+                  <label class="field-label" for="goal-target-input">Нужная сумма<input id="goal-target-input" name="target" type="number" inputmode="decimal" min="0.01" step="0.01" placeholder="0" required /></label>
+                  <label class="field-label" for="goal-date-input">Срок <span class="optional">необязательно</span><input id="goal-date-input" name="date" type="date" /></label>
+                </div>
+                <button class="secondary-action" id="goal-submit" type="submit">Создать цель</button>
+                <button class="cancel-edit-action" id="cancel-goal-edit" type="button" hidden>Отмена</button>
+              </form>
+            </details>
+          </section>
+
+          <section class="plan-section" aria-labelledby="recurring-title">
+            <div class="section-heading"><div><p class="eyebrow muted">АВТОМАТИЧЕСКИЕ ЗАПИСИ</p><h3 id="recurring-title">Регулярные операции</h3></div></div>
+            <div id="recurring-list" class="recurring-list"></div>
+            <p class="plan-hint">Чтобы создать регулярную операцию, включите повторение при добавлении дохода или расхода. Запись появится при следующем открытии приложения в дату платежа.</p>
+          </section>
+
+          <section class="plan-section data-management-section" aria-labelledby="data-management-title">
+            <div class="section-heading"><div><p class="eyebrow muted">ЛОКАЛЬНЫЕ ДАННЫЕ</p><h3 id="data-management-title">Управление данными</h3></div></div>
+            <div class="data-reset-card">
+              <div><strong>Удалить все данные</strong><p>Удалятся счета, операции, лимиты, цели и регулярные записи на этом устройстве.</p></div>
+              <button class="data-reset-action" type="button" id="reset-all-data">Удалить всё</button>
+            </div>
+          </section>
+        </section>
       </main>
 
       <nav class="bottom-nav" aria-label="Основная навигация">
@@ -124,8 +200,12 @@
         <button class="nav-item" type="button" data-go="history">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 6.5h15M4.5 12h15M4.5 17.5h9"/><circle cx="3" cy="6.5" r=".45"/><circle cx="3" cy="12" r=".45"/><circle cx="3" cy="17.5" r=".45"/></svg><span>Операции</span>
         </button>
+        <button class="nav-item nav-add-item" type="button" data-open-add aria-label="Добавить операцию"><span class="nav-add-mark" aria-hidden="true">+</span><span>Добавить</span></button>
         <button class="nav-item" type="button" data-go="analytics">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V9m5 10V5m5 14v-7m5 7V3"/></svg><span>Аналитика</span>
+        </button>
+        <button class="nav-item" type="button" data-go="plan">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r=".8"/></svg><span>План</span>
         </button>
       </nav>
     </div>
@@ -137,15 +217,25 @@
         <div class="type-switch" role="group" aria-label="Тип операции">
           <button class="type-option is-selected" type="button" data-type="expense" aria-pressed="true">Расход</button>
           <button class="type-option" type="button" data-type="income" aria-pressed="false">Доход</button>
+          <button class="type-option" id="transfer-type-option" type="button" data-type="transfer" aria-pressed="false">Перевод</button>
         </div>
         <label class="field-label" for="amount-input">Сумма</label>
         <div class="amount-field"><input id="amount-input" name="amount" type="number" inputmode="decimal" min="0.01" step="0.01" placeholder="0" required /><span>₽</span></div>
         <div class="form-grid">
-          <label class="field-label" for="category-input">Категория<select id="category-input" name="category" required></select></label>
-          <label class="field-label" for="date-input">Дата<input id="date-input" name="date" type="date" required /></label>
+          <label class="field-label" id="category-field" for="category-input">Категория<select id="category-input" name="category" required></select></label>
+          <label class="field-label" id="date-field-label" for="date-input"><span id="date-label-text">Дата</span><input id="date-input" name="date" type="date" required /></label>
+        </div>
+        <label class="field-label" id="account-field" for="account-input">Счёт<select id="account-input" name="account" required></select></label>
+        <div class="form-grid transfer-fields" id="transfer-fields" hidden>
+          <label class="field-label" for="from-account-input">Откуда<select id="from-account-input" name="fromAccount"></select></label>
+          <label class="field-label" for="to-account-input">Куда<select id="to-account-input" name="toAccount"></select></label>
+        </div>
+        <div class="repeat-control" id="repeat-control">
+          <label class="repeat-toggle" id="repeat-toggle-label"><input id="repeat-input" name="repeat" type="checkbox" />Повторять операцию</label>
+          <label class="field-label" id="repeat-frequency-wrap" for="repeat-frequency-input" hidden>Как часто<select id="repeat-frequency-input" name="frequency"><option value="monthly">Каждый месяц</option><option value="weekly">Каждую неделю</option></select></label>
         </div>
         <label class="field-label" for="note-input">Комментарий <span class="optional">необязательно</span><input id="note-input" name="note" type="text" maxlength="60" placeholder="Например, продукты на неделю" /></label>
-        <button class="primary-action submit-action" type="submit">Сохранить операцию</button>
+        <button class="primary-action submit-action" id="save-transaction" type="submit">Сохранить операцию</button>
       </form>
     </dialog>
 
@@ -154,12 +244,25 @@
         <div class="sheet-grabber" aria-hidden="true"></div>
         <div class="sheet-header"><div><p class="eyebrow muted">ДЕТАЛИ ОПЕРАЦИИ</p><h2 id="detail-title">Операция</h2></div><button class="icon-button close-button" type="button" data-close-dialog aria-label="Закрыть"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
         <div id="detail-body"></div>
+        <button class="secondary-action" type="button" id="edit-transaction">Изменить операцию</button>
         <button class="delete-action" type="button" id="delete-transaction">Удалить операцию</button>
       </div>
     </dialog>
 
+    <dialog class="info-dialog confirm-dialog" id="confirm-dialog" aria-labelledby="confirm-title">
+      <div class="info-content confirm-content">
+        <p class="eyebrow muted">ПОДТВЕРЖДЕНИЕ</p>
+        <h2 id="confirm-title">Удалить данные?</h2>
+        <p id="confirm-message"></p>
+        <div class="confirmation-actions">
+          <button class="cancel-edit-action" type="button" id="cancel-confirmation">Отмена</button>
+          <button class="data-reset-action" type="button" id="confirm-action">Удалить</button>
+        </div>
+      </div>
+    </dialog>
+
     <dialog class="info-dialog" id="about-dialog" aria-labelledby="about-title">
-      <div class="info-content"><button class="icon-button close-button" type="button" data-close-dialog aria-label="Закрыть"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button><div class="brand-mark large-mark" aria-hidden="true"><span>₽</span></div><h2 id="about-title">Мои финансы</h2><p>Простой личный учёт денег. Все операции хранятся в этом браузере на вашем устройстве.</p><p class="info-note">При очистке данных браузера записи тоже удалятся.</p></div>
+      <div class="info-content settings-content"><button class="icon-button close-button" type="button" data-close-dialog aria-label="Закрыть"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button><h2 id="about-title">Настройки</h2><div class="settings-theme-row"><span><strong>Тема оформления</strong><small>Светлая или тёмная</small></span><button class="theme-switch" id="theme-toggle" type="button" role="switch" aria-checked="false" aria-label="Переключить на тёмную тему" title="Переключить тему"><svg class="theme-switch-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.5"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg><svg class="theme-switch-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.2 15.4A8.5 8.5 0 0 1 8.6 3.8 8.7 8.7 0 1 0 20.2 15.4Z"/></svg><span class="theme-switch-thumb" aria-hidden="true"></span></button></div><p>Личные финансы хранятся только в этом браузере на вашем устройстве.</p><p class="info-note">Очистка данных браузера удалит записи приложения.</p></div>
     </dialog>
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
