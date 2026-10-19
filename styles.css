@@ -362,8 +362,8 @@ html { background: #edf1ed; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; } }
 
 .account-actions, .plan-card-actions { display: flex; align-items: center; gap: 5px; }
-.account-actions .mini-action, .plan-card-actions .mini-action { min-height: 30px; padding: 0 7px; font-size: 9px; }
-.account-actions .remove-action, .plan-card-actions .remove-action { width: 30px; padding: 0; }
+.account-actions .mini-action, .plan-card-actions .mini-action { min-height: 36px; padding: 0 9px; font-size: 10px; }
+.account-actions .remove-action, .plan-card-actions .remove-action { width: 36px; padding: 0; }
 .goal-card .goal-topline { gap: 8px; }
 .goal-card .plan-card-title { flex: 1 1 auto; }
 .data-management-section { padding-bottom: 14px; }
