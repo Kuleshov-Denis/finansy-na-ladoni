@@ -1,0 +1,14 @@
+{
+  "name": "Мои финансы",
+  "short_name": "Финансы",
+  "description": "Простой личный учёт доходов и расходов",
+  "lang": "ru",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f5f1",
+  "theme_color": "#f4f5f1",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

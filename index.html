@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#f4f5f1" />
+    <meta name="description" content="Простой личный учёт доходов и расходов." />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="icon" href="icon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="styles.css" />
+    <title>Мои финансы</title>
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand-mark" aria-hidden="true"><span>₽</span></div>
+        <div class="brand-copy">
+          <p class="eyebrow">ЛИЧНЫЙ БЮДЖЕТ</p>
+          <h1>Мои финансы</h1>
+        </div>
+        <button class="icon-button profile-button" type="button" aria-label="О приложении" id="about-button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>
+        </button>
+      </header>
+
+      <main>
+        <section class="view is-active" id="view-home" aria-labelledby="home-title">
+          <div class="section-intro">
+            <div>
+              <p class="eyebrow muted" id="today-label"></p>
+              <h2 id="home-title">Ваш баланс</h2>
+            </div>
+          </div>
+
+          <article class="balance-card">
+            <div class="balance-topline">
+              <span>Всего доступно</span>
+              <button class="balance-eye" type="button" id="toggle-balance" aria-label="Скрыть баланс">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.3-6 9.5-6 9.5 6 9.5 6-3.3 6-9.5 6-9.5-6-9.5-6Z"/><circle cx="12" cy="12" r="2.8"/></svg>
+              </button>
+            </div>
+            <p class="balance-value" id="total-balance">0 ₽</p>
+            <div class="balance-footer">
+              <span class="balance-dot"></span>
+              <span>Баланс по всем операциям</span>
+              <span class="balance-period" id="balance-period"></span>
+            </div>
+            <div class="balance-decoration decoration-one"></div>
+            <div class="balance-decoration decoration-two"></div>
+          </article>
+
+          <div class="month-cards">
+            <article class="month-card income-card">
+              <div class="month-card-heading"><span class="metric-icon income-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M6.5 10.5 12 5l5.5 5.5"/></svg></span><span>Доходы за месяц</span></div>
+              <p class="metric-value" id="month-income">0 ₽</p>
+            </article>
+            <article class="month-card expense-card">
+              <div class="month-card-heading"><span class="metric-icon expense-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14m5.5-5.5L12 19l-5.5-5.5"/></svg></span><span>Расходы за месяц</span></div>
+              <p class="metric-value" id="month-expense">0 ₽</p>
+            </article>
+          </div>
+
+          <button class="primary-action" type="button" data-open-add>
+            <span class="plus-icon" aria-hidden="true">+</span>
+            Добавить операцию
+          </button>
+
+          <section class="content-section" aria-labelledby="recent-title">
+            <div class="section-heading">
+              <div><p class="eyebrow muted">ЗАПИСИ</p><h2 id="recent-title">Последние операции</h2></div>
+              <button class="text-button" type="button" data-go="history">Все <span aria-hidden="true">→</span></button>
+            </div>
+            <div id="recent-list" class="transaction-list"></div>
+          </section>
+
+          <section class="content-section category-preview" aria-labelledby="category-preview-title">
+            <div class="section-heading">
+              <div><p class="eyebrow muted">ЭТОТ МЕСЯЦ</p><h2 id="category-preview-title">Куда уходят деньги</h2></div>
+              <button class="text-button" type="button" data-go="analytics">Анализ <span aria-hidden="true">→</span></button>
+            </div>
+            <div id="home-category-list" class="category-list"></div>
+          </section>
+        </section>
+
+        <section class="view" id="view-history" aria-labelledby="history-title" hidden>
+          <div class="section-intro history-intro">
+            <div><p class="eyebrow muted">ВАШИ ЗАПИСИ</p><h2 id="history-title">Операции</h2></div>
+            <button class="round-add" type="button" data-open-add aria-label="Добавить операцию">+</button>
+          </div>
+          <div class="filter-bar">
+            <label class="month-select-wrap" for="history-month"><span class="calendar-icon" aria-hidden="true">▦</span><input id="history-month" type="month" /></label>
+            <button class="filter-clear" type="button" id="history-all">Все</button>
+          </div>
+          <div class="history-summary" id="history-summary"></div>
+          <div id="history-list" class="transaction-list grouped-list"></div>
+        </section>
+
+        <section class="view" id="view-analytics" aria-labelledby="analytics-title" hidden>
+          <div class="section-intro">
+            <div><p class="eyebrow muted">ЦИФРЫ И ПРИВЫЧКИ</p><h2 id="analytics-title">Аналитика</h2></div>
+          </div>
+          <div class="filter-bar analytics-filter">
+            <label class="month-select-wrap" for="analytics-month"><span class="calendar-icon" aria-hidden="true">▦</span><input id="analytics-month" type="month" /></label>
+          </div>
+          <article class="analytics-card">
+            <div class="section-heading compact-heading"><div><p class="eyebrow muted">РАСХОДЫ</p><h3>Структура расходов</h3></div><span class="period-chip" id="analytics-period"></span></div>
+            <div class="donut-layout">
+              <div class="donut" id="expense-donut" role="img" aria-label="Диаграмма расходов"><div class="donut-hole"><span>Расходы</span><strong id="donut-total">0 ₽</strong></div></div>
+              <div id="donut-legend" class="donut-legend"></div>
+            </div>
+            <div id="analytics-category-list" class="analytics-category-list"></div>
+          </article>
+          <article class="analytics-card trend-card">
+            <div class="section-heading compact-heading"><div><p class="eyebrow muted">ДИНАМИКА</p><h3>За последние 6 месяцев</h3></div><div class="chart-key"><span><i class="key-income"></i>Доходы</span><span><i class="key-expense"></i>Расходы</span></div></div>
+            <div class="trend-chart" id="trend-chart" aria-label="Доходы и расходы за последние шесть месяцев"></div>
+          </article>
+        </section>
+      </main>
+
+      <nav class="bottom-nav" aria-label="Основная навигация">
+        <button class="nav-item is-current" type="button" data-go="home" aria-current="page">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3.5 10.5 8.5-7 8.5 7v9a1.5 1.5 0 0 1-1.5 1.5h-14A1.5 1.5 0 0 1 3.5 19.5v-9Z"/><path d="M9 21v-7h6v7"/></svg><span>Главная</span>
+        </button>
+        <button class="nav-item" type="button" data-go="history">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 6.5h15M4.5 12h15M4.5 17.5h9"/><circle cx="3" cy="6.5" r=".45"/><circle cx="3" cy="12" r=".45"/><circle cx="3" cy="17.5" r=".45"/></svg><span>Операции</span>
+        </button>
+        <button class="nav-item" type="button" data-go="analytics">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V9m5 10V5m5 14v-7m5 7V3"/></svg><span>Аналитика</span>
+        </button>
+      </nav>
+    </div>
+
+    <dialog class="sheet-dialog" id="transaction-dialog" aria-labelledby="add-title">
+      <form id="transaction-form" class="sheet-content">
+        <div class="sheet-grabber" aria-hidden="true"></div>
+        <div class="sheet-header"><div><p class="eyebrow muted">НОВАЯ ЗАПИСЬ</p><h2 id="add-title">Добавить операцию</h2></div><button class="icon-button close-button" type="button" data-close-dialog aria-label="Закрыть"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
+        <div class="type-switch" role="group" aria-label="Тип операции">
+          <button class="type-option is-selected" type="button" data-type="expense" aria-pressed="true">Расход</button>
+          <button class="type-option" type="button" data-type="income" aria-pressed="false">Доход</button>
+        </div>
+        <label class="field-label" for="amount-input">Сумма</label>
+        <div class="amount-field"><input id="amount-input" name="amount" type="number" inputmode="decimal" min="0.01" step="0.01" placeholder="0" required /><span>₽</span></div>
+        <div class="form-grid">
+          <label class="field-label" for="category-input">Категория<select id="category-input" name="category" required></select></label>
+          <label class="field-label" for="date-input">Дата<input id="date-input" name="date" type="date" required /></label>
+        </div>
+        <label class="field-label" for="note-input">Комментарий <span class="optional">необязательно</span><input id="note-input" name="note" type="text" maxlength="60" placeholder="Например, продукты на неделю" /></label>
+        <button class="primary-action submit-action" type="submit">Сохранить операцию</button>
+      </form>
+    </dialog>
+
+    <dialog class="sheet-dialog detail-dialog" id="detail-dialog" aria-labelledby="detail-title">
+      <div class="sheet-content detail-content">
+        <div class="sheet-grabber" aria-hidden="true"></div>
+        <div class="sheet-header"><div><p class="eyebrow muted">ДЕТАЛИ ОПЕРАЦИИ</p><h2 id="detail-title">Операция</h2></div><button class="icon-button close-button" type="button" data-close-dialog aria-label="Закрыть"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
+        <div id="detail-body"></div>
+        <button class="delete-action" type="button" id="delete-transaction">Удалить операцию</button>
+      </div>
+    </dialog>
+
+    <dialog class="info-dialog" id="about-dialog" aria-labelledby="about-title">
+      <div class="info-content"><button class="icon-button close-button" type="button" data-close-dialog aria-label="Закрыть"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button><div class="brand-mark large-mark" aria-hidden="true"><span>₽</span></div><h2 id="about-title">Мои финансы</h2><p>Простой личный учёт денег. Все операции хранятся в этом браузере на вашем устройстве.</p><p class="info-note">При очистке данных браузера записи тоже удалятся.</p></div>
+    </dialog>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="app.js" defer></script>
+  </body>
+</html>
