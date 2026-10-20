@@ -365,7 +365,9 @@ html { background: #edf1ed; }
 .account-actions .mini-action, .plan-card-actions .mini-action { min-height: 36px; padding: 0 9px; font-size: 10px; }
 .account-actions .remove-action, .plan-card-actions .remove-action { width: 36px; padding: 0; }
 .goal-card .goal-topline { gap: 8px; }
-.goal-card .plan-card-title { flex: 1 1 auto; }
+.goal-card .plan-card-title { min-width: 0; flex: 1 1 auto; }
+.goal-card .plan-card-actions .goal-delete-action { width: auto; padding: 0 9px; border-color: #ead8d3; color: #a75243; background: #fffaf8; }
+.goal-card .plan-card-actions .goal-delete-action:hover { border-color: #dfb8ae; background: #fff3ef; }
 .data-management-section { padding-bottom: 14px; }
 .data-reset-card { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 15px; border: 1px solid #f0dfda; border-radius: 16px; background: #fffaf8; }
 .data-reset-card > div { min-width: 0; }
@@ -389,6 +391,9 @@ html { background: #edf1ed; }
   .account-card { gap: 7px; padding-right: 9px; padding-left: 9px; }
   .account-actions .mini-action { padding-right: 5px; padding-left: 5px; }
   .account-actions .remove-action { width: 27px; }
+  .goal-card .plan-card-actions { gap: 4px; }
+  .goal-card .plan-card-actions .mini-action { padding-right: 6px; padding-left: 6px; }
+  .goal-card .plan-card-actions .goal-delete-action { width: auto; }
   .data-reset-card { align-items: flex-start; flex-direction: column; }
   .data-reset-action { width: 100%; }
 }
@@ -712,6 +717,8 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline-color:
 :root[data-theme="dark"] .secondary-action:hover, :root[data-theme="dark"] .secondary-action:active { background: #a8e922; }
 :root[data-theme="dark"] .mini-action { border-color: #30363a; color: #e3e6e8; background: #1c2023; }
 :root[data-theme="dark"] .mini-action:hover { background: #292e32; }
+:root[data-theme="dark"] .goal-card .plan-card-actions .goal-delete-action { border-color: #493330; color: #ff9b90; background: #241c1b; }
+:root[data-theme="dark"] .goal-card .plan-card-actions .goal-delete-action:hover { border-color: #68423c; background: #332321; }
 :root[data-theme="dark"] .sheet-dialog, :root[data-theme="dark"] .info-dialog { border-color: #30363a; color: #f4f6f7; background: #191c1f; }
 :root[data-theme="dark"] .close-button { border-color: #343a3e; color: #e3e6e8; background: #252a2d; }
 :root[data-theme="dark"] .toast { color: #111; background: var(--green); }
@@ -863,6 +870,8 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline-color:
 :root[data-theme="light"] .secondary-action:hover, :root[data-theme="light"] .secondary-action:active { background: #cae482; }
 :root[data-theme="light"] .mini-action { border-color: #e1e5e4; color: #596265; background: #fff; }
 :root[data-theme="light"] .mini-action:hover { background: #f1f3f1; }
+:root[data-theme="light"] .goal-card .plan-card-actions .goal-delete-action { border-color: #ead8d3; color: #a75243; background: #fffaf8; }
+:root[data-theme="light"] .goal-card .plan-card-actions .goal-delete-action:hover { border-color: #dfb8ae; background: #fff3ef; }
 :root[data-theme="light"] .sheet-dialog, :root[data-theme="light"] .info-dialog { border-color: #e1e5e4; color: #202527; background: #fff; }
 :root[data-theme="light"] .close-button { border-color: #e1e5e4; color: #3a4244; background: #f0f2f0; }
 :root[data-theme="light"] .toast { color: #243009; background: #d9ed9f; }
